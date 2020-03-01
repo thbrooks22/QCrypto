@@ -13,9 +13,9 @@ class Polynomial {
   public:
     // Construct polynomial with array of mpz_t coefficients — this is sufficient
     //  for finite fields with which we will deal.
-    Polynomial(vector<mpz_t*> coeffs, int degree) {
+    Polynomial(vector<mpz_t*> coeffs) {
       this->coeffs = coeffs;
-      this->degree = degree;
+      this->degree = coeffs.size() - 1;
     }
 
 
@@ -29,6 +29,7 @@ class Polynomial {
     }
 
 
+    // Get coefficient of x^k.
     mpz_t* getCoeff(int k) {
       return this->coeffs.at(this->degree - k);
     }
@@ -44,8 +45,9 @@ int main() {
   mpz_init_set_str(coeff_2, val_2, base);
   mpz_t* coeff_arr[2] = {&coeff_1, &coeff_2};
   vector<mpz_t*> coeffs (coeff_arr, coeff_arr + sizeof(coeff_arr) / sizeof(mpz_t*));
-  Polynomial *p = new Polynomial(coeffs, 2);
+  Polynomial *p = new Polynomial(coeffs);
   gmp_printf("check it out: %Zd :)\n", *((*p).getCoeff(1)));
   mpz_clear(coeff_1);
   mpz_clear(coeff_2);
+  delete p;
 }
