@@ -2,5 +2,5 @@ CXX = g++
 CXXFLAGS = -lgmp
 
 poly:
-	$(CXX) $(CXXFLAGS) Polynomial.cpp -o poly
+	$(CXX) $(CXXFLAGS) Polynomial.cpp -o poly.o
 	
