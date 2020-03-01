@@ -45,7 +45,7 @@ int main() {
   mpz_t* coeff_arr[2] = {&coeff_1, &coeff_2};
   vector<mpz_t*> coeffs (coeff_arr, coeff_arr + sizeof(coeff_arr) / sizeof(mpz_t*));
   Polynomial *p = new Polynomial(coeffs, 2);
-  gmp_printf("check it out: %Zd\n", *((*p).getCoeff(1)));
+  gmp_printf("check it out: %Zd :)\n", *((*p).getCoeff(1)));
   mpz_clear(coeff_1);
   mpz_clear(coeff_2);
 }
