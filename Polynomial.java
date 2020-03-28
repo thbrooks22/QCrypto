@@ -58,4 +58,22 @@ public class Polynomial
 
     return new Polynomial(resCoeffs);
   }
+
+
+  public Polynomial plusModZ(Polynomial p, BigInteger z) {
+    ArrayList<BigInteger> sumCoeffs = this.plus(p).getCoeffs();
+    for (int i = 0; i < sumCoeffs.size(); i++) {
+      sumCoeffs.set(i, sumCoeffs.get(i).mod(z));
+    }
+    return new Polynomial(sumCoeffs);
+  }
+
+
+  public Polynomial plusModP(Polynomial p, Polynomial q) {
+    ArrayList<BigInteger> sumCoeffs = this.plus(p).getCoeffs();
+    for (int i = 0; i < sumCoeffs.size(); i++) {
+      sumCoeffs.set(i, sumCoeffs.get(i).mod(q.getCoeffs().get(i)));
+    }
+    return new Polynomial(sumCoeffs);
+  }
 }
