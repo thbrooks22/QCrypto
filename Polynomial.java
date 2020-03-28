@@ -59,6 +59,17 @@ public class Polynomial
   }
 
 
+  // Polynomial with coefficients chosen uniformly at random from the integers
+  //  mod maxLimit
+  public static Polynomial randPolynomial(int deg, BigInteger maxLimit) {
+    ArrayList<BigInteger> coeffs= new ArrayList<BigInteger>(deg + 1);
+    for (int i = 0; i < deg + 1; i++) {
+      zeros.add(Mathematics.randBigInt(new BigInteger("0"), maxLimit));
+    }
+    return new Polynomial(coeffs);
+  }
+
+
   // Standard sum of Polynomials
   public Polynomial plus(Polynomial p) {
     int maxDegree = Math.max(this.degree, p.getDegree());
