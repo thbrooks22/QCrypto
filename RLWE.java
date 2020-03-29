@@ -1,3 +1,10 @@
+/*
+  Ring learning with errors key exchange protocol originally conceived by Regev.
+
+    Some proofs of security and correctness: https://eprint.iacr.org/2012/688.pdf
+    SINGH-prefixed parameters: https://eprint.iacr.org/2015/138
+*/
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,6 +56,7 @@ public class RLWE
   }
 
 
+  // Initialize RLWE-KX protocol with parameters specified in Singh (link above)
   public RLWE() {
     this.params = SINGH_PARAMS;
     this.deg = SINGH_DEG;
@@ -63,6 +71,7 @@ public class RLWE
   }
 
 
+  // RLWE-KX initiator
   public Polynomial initiate() {
     this.si = this.chiAlpha();
     this.ei = this.chiAlpha();
@@ -74,6 +83,7 @@ public class RLWE
   }
 
 
+  // RLWE-KX responder
   public Polynomial respond(Polynomial pi) {
     this.sr = this.chiAlpha();
     this.er = this.chiAlpha();
@@ -90,10 +100,45 @@ public class RLWE
   }
 
 
+  /*
+    Return random polynomial with this.degree coefficients distributed according
+      to the finite discrete Gaussian distribution with limit parameter this.q and
+      some specified standard deviation.
+  */
   public Polynomial chiAlpha() {
     return Polynomial.randPolynomial(
       this.deg, this.params, Mathematics.FINITE_DGAUSSIAN
       ).modZ(this.q).modP(this.phi);
+  }
+
+
+  /*
+    RLWE helpers:
+
+      sig(BigInteger z): computes the signal function on z, deciding membership
+        of z in the set E = {-[q/4], ... , [[q/4]]}, where [] is the floor
+        function and [[]] is the round function. If z is a member, return ZERO.
+        Otherwise, return ONE.
+  */
+
+  public BigInteger sig(BigInteger z) {
+    // Compute minimum bound of set E described above
+    BigInteger eMin =
+      BigInteger.ZERO.subtract(
+        this.q.divide(new BigInteger("4"))
+      ).mod(this.q);
+    BigInteger eMax;
+
+    // Get quotient and remainder, check which way to round
+    BigInteger[] proveEMax =
+      this.q.divideAndRemainder(new BigInteger("4"));
+    if (proveEMax[1].compareTo(BigInteger.TWO) < 0)
+      eMax = proveEMax[0];
+    else eMax = proveEMax[0].add(BigInteger.ONE);
+
+    // Check z for membership in set E, return appropriate signal
+    if (z.compareTo(eMin) >= 0 || z.compareTo(eMax) <= 0) return BigInteger.ZERO;
+    return BigInteger.ONE;
   }
 
 

@@ -136,9 +136,12 @@ public class Mathematics
 
     for (int i = k; i > 0; i--) {
       boolean ct = false;
-      ArrayList<BigInteger> params = new ArrayList<BigInteger>(2);
-      params.add(two);
-      params.add(n.subtract(one));
+      ArrayList<BigInteger> params = new ArrayList<BigInteger>(2) {
+        {
+          add(two);
+          n.subtract(one);
+        }
+      };
       BigInteger a = unifRandBigInt(params);
       BigInteger x = a.pow(d.intValue()).mod(n);
       if (x.equals(one) || x.equals(n.subtract(one))) continue;
