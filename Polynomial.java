@@ -108,6 +108,14 @@ public class Polynomial
 
 
   public static void main(String[] args) {
-    System.out.println(Mathematics.isPrime(new BigInteger(args[0]), 50));
+    int deg = Integer.parseInt(args[0]);
+    ArrayList<BigInteger> gaussParams = new ArrayList<BigInteger>() {
+      {
+        add(new BigInteger("13"));
+        add(new BigInteger("5"));
+      }
+    };
+    Polynomial p = randPolynomial(deg, gaussParams, 2);
+    System.out.println(p.getCoeffs());
   }
 }

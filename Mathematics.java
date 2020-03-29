@@ -9,8 +9,9 @@ public class Mathematics
   public static ArrayList<Function<ArrayList<BigInteger>, BigInteger>> distros =
     new ArrayList<Function<ArrayList<BigInteger>, BigInteger>>() {
       {
-        add(p -> Mathematics.unifRandBigInt(p));
-        add(p -> Mathematics.dNormRandBigInt(p));
+        add(params -> Mathematics.unifRandBigInt(params));
+        add(params -> Mathematics.dNormRandBigInt(params));
+        add(params -> Mathematics.finiteDNormRandBigInt(params));
       }
     };
 
@@ -22,8 +23,13 @@ public class Mathematics
         BigInteger between params(0), inclusive, and params(1), exclusive.
 
       dNormRandBigInt(ArrayList<BigInteger> params): generates a random variable
-        distributed according to the discrete Gaussian distribution with mean
-        params(0) and standard deviation params(1).
+        distributed according to the discrete Gaussian distribution (round-down
+        Gaussian) with mean params(0) and standard deviation params(1).
+
+      finiteDNormRandBigInt(ArrayList<BigInteger> params): generates a random
+        variable distributed according to the finite discrete Gaussian distribution
+        (truncated round-down Gaussian) with mean 0, limit parameter params(0),
+        and standard deviation params(1).
 
   */
 
@@ -63,14 +69,47 @@ public class Mathematics
     }
     catch (Exception e)
     {
-      throw new
-        IllegalArgumentException("Invalid parameters for Gaussian distribution.");
+      throw new IllegalArgumentException(
+        "Invalid parameters for discrete Gaussian distribution."
+        );
     }
 
     Random rnd = new Random(System.nanoTime());
     double gaussian = ((double) mu.intValue()) +  ((double) sigma.intValue()) *
       rnd.nextGaussian();
     return new BigInteger(Integer.toString((int) Math.floor(gaussian)));
+  }
+
+
+  public static BigInteger finiteDNormRandBigInt(ArrayList<BigInteger> params) {
+    BigInteger mu = BigInteger.ZERO;
+    BigInteger q;
+    BigInteger sigma;
+
+    // Throw IllegalArgumentException if parameters are of improper length
+    try {
+      q = params.get(0);
+      sigma = params.get(1);
+    }
+    catch (Exception e)
+    {
+      throw new IllegalArgumentException(
+        "Invalid parameters for finite discrete Gaussian distribution."
+        );
+    }
+
+    BigInteger minLimit = BigInteger.ONE.subtract(q).divide(BigInteger.TWO);
+    BigInteger maxLimit = q.subtract(BigInteger.ONE).divide(BigInteger.TWO);
+    BigInteger res = dNormRandBigInt(
+      new ArrayList<BigInteger>() {
+        {
+          add(mu);
+          add(sigma);
+        }
+      });
+    if (res.compareTo(minLimit) < 0) return minLimit;
+    if (res.compareTo(maxLimit) > 0) return maxLimit;
+    return res;
   }
 
 
