@@ -46,6 +46,8 @@ public class RLWE
   private Polynomial sr;
   private Polynomial er;
 
+
+  // Initialize RLWE-KX protocol with user-defined parameters (unsafe)
   public RLWE(Polynomial a, BigInteger q, int deg, ArrayList<BigInteger> params,
     Polynomial phi) {
     this.a = a;
@@ -53,6 +55,19 @@ public class RLWE
     this.deg = deg;
     this.params = params;
     this.phi = phi;
+  }
+
+
+  /*
+    Copy constructor (only copies initial parameters). Allows protocol parameter
+      distribution.
+  */
+  public RLWE(RLWE r) {
+    this.a = r.a;
+    this.q = r.q;
+    this.deg = r.deg;
+    this.params = r.params;
+    this.phi = r.phi;
   }
 
 
