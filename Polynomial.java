@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.math.BigInteger;
 import java.lang.Math;
+import java.util.function.Function;
 
 public class Polynomial
 {
@@ -29,7 +30,7 @@ public class Polynomial
   // Get coefficient of x^k, return 0 if k>0 and coefficient not defined as of yet
   public BigInteger getCoeffOf(int k) {
     if (k < 0)
-      throw IndexOutOfBoundsException("No such coefficient.");
+      throw new IndexOutOfBoundsException("No such coefficient.");
     else if (k > this.degree) return new BigInteger("0");
     return this.coeffs.get(k);
   }
@@ -38,7 +39,7 @@ public class Polynomial
   // Set coefficient of x^k to z
   public void setCoeffOf(int k, BigInteger z) {
     if (k < 0)
-      throw IndexOutOfBoundsException("No such coefficient.");
+      throw new IndexOutOfBoundsException("No such coefficient.");
     else if (k > this.degree) {
       for (int i = this.degree; i < k; i++) {
         this.coeffs.add(new BigInteger("0"));
@@ -61,10 +62,15 @@ public class Polynomial
 
   // Polynomial with coefficients chosen uniformly at random from the integers
   //  mod maxLimit
-  public static Polynomial randPolynomial(int deg, BigInteger maxLimit) {
+  public static Polynomial randPolynomial(int deg, ArrayList<BigInteger> params,
+    int distro) {
+    ArrayList<Function<ArrayList<BigInteger>, BigInteger>> distros =
+      new ArrayList<Function<ArrayList<BigInteger>, BigInteger>>();
+    distros.add(p -> Mathematics.unifRandBigInt(p));
+    distros.add(p -> Mathematics.dNormRandBigInt(p));
     ArrayList<BigInteger> coeffs= new ArrayList<BigInteger>(deg + 1);
     for (int i = 0; i < deg + 1; i++) {
-      zeros.add(Mathematics.randBigInt(new BigInteger("0"), maxLimit));
+      coeffs.add(distros.get(distro).apply(params));
     }
     return new Polynomial(coeffs);
   }
