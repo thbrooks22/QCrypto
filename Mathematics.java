@@ -9,9 +9,9 @@ public class Mathematics
   public static ArrayList<Function<ArrayList<BigInteger>, BigInteger>> distros =
     new ArrayList<Function<ArrayList<BigInteger>, BigInteger>>() {
       {
-        add(params -> Mathematics.unifRandBigInt(params));
-        add(params -> Mathematics.dNormRandBigInt(params));
-        add(params -> Mathematics.finiteDNormRandBigInt(params));
+        add(params -> unifRandBigInt(params));
+        add(params -> dNormRandBigInt(params));
+        add(params -> finiteDNormRandBigInt(params));
       }
     };
 
