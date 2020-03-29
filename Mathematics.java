@@ -28,10 +28,22 @@ public class Mathematics
   */
 
   public static BigInteger unifRandBigInt(ArrayList<BigInteger> params) {
-    BigInteger minLimit = params.get(0);
-    BigInteger maxLimit = params.get(1);
+    BigInteger minLimit;
+    BigInteger maxLimit;
+
+    // Throw IllegalArgumentException if parameters are of improper length or value
+    try {
+      minLimit = params.get(0);
+      maxLimit = params.get(1);
+      if (minLimit.compareTo(maxLimit) <= 0) throw new Exception();
+    }
+    catch (Exception e) {
+      throw new
+        IllegalArgumentException("Invalid parameters for uniform distribution.");
+    }
+
     BigInteger bigInt = maxLimit.subtract(minLimit);
-    Random rnd = new Random();
+    Random rnd = new Random(System.nanoTime());
     int len = maxLimit.bitLength();
     BigInteger res = new BigInteger(len, rnd);
     if (res.compareTo(minLimit) < 0) res = res.add(minLimit);
@@ -41,9 +53,21 @@ public class Mathematics
 
 
   public static BigInteger dNormRandBigInt(ArrayList<BigInteger> params) {
-    BigInteger mu = params.get(0);
-    BigInteger sigma = params.get(1);
-    Random rnd = new Random();
+    BigInteger mu;
+    BigInteger sigma;
+
+    // Throw IllegalArgumentException if parameters are of improper length
+    try {
+      mu = params.get(0);
+      sigma = params.get(1);
+    }
+    catch (Exception e)
+    {
+      throw new
+        IllegalArgumentException("Invalid parameters for Gaussian distribution.");
+    }
+
+    Random rnd = new Random(System.nanoTime());
     double gaussian = ((double) mu.intValue()) +  ((double) sigma.intValue()) *
       rnd.nextGaussian();
     return new BigInteger(Integer.toString((int) Math.floor(gaussian)));
