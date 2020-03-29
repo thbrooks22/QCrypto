@@ -106,7 +106,8 @@ public class Polynomial
   public Polynomial modP(Polynomial p) {
     ArrayList<BigInteger> coeffs = this.coeffs;
     for (int i = 0; i < coeffs.size(); i++) {
-      coeffs.set(i, coeffs.get(i).mod(p.getCoeffOf(i)));
+      if (!p.getCoeffOf(i).equals(BigInteger.ZERO))
+        coeffs.set(i, coeffs.get(i).mod(p.getCoeffOf(i)));
     }
     return new Polynomial(coeffs);
   }
@@ -175,6 +176,17 @@ public class Polynomial
   }
 
 
+  public String toString() {
+    String res = "";
+    for (int i = 0; i < this.degree; i++) {
+      BigInteger c = this.getCoeffOf(this.degree - i);
+      if (c.equals(BigInteger.ZERO)) continue;
+      res += this.getCoeffOf(this.degree - i) + "x^" + (this.degree - i) + " + ";
+    }
+    return res + this.getCoeffOf(0);
+  }
+
+
   public static void main(String[] args) {
     int deg = Integer.parseInt(args[0]);
     ArrayList<BigInteger> gaussParams = new ArrayList<BigInteger>() {
@@ -184,8 +196,8 @@ public class Polynomial
       }
     };
     Polynomial p = randPolynomial(deg, gaussParams, 2);
-    System.out.println(p.getCoeffs());
+    System.out.println(p);
     p.setCoeffOf(deg, BigInteger.TWO);
-    System.out.println(p.getCoeffs());
+    System.out.println(p);
   }
 }

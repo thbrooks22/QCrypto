@@ -4,7 +4,7 @@ import java.util.Collections;
 
 public class RLWE
 {
-  private static BigInteger SINGH_DEG = 1024;
+  private static int SINGH_DEG = 1024;
   private static BigInteger SINGH_Q = new BigInteger("40961");
   private static BigInteger SINGH_SIGMA = new BigInteger("4");
   private static Polynomial SINGH_PHI = new Polynomial (
@@ -22,12 +22,22 @@ public class RLWE
     }
   };
 
+  /*
+    Initial parameters
+  */
   private Polynomial a;
   private BigInteger q;
   private int deg;
   private ArrayList<BigInteger> params;
   private Polynomial phi;
 
+  /*
+    Secret parameters
+  */
+  private Polynomial si;
+  private Polynomial ei;
+  private Polynomial sr;
+  private Polynomial er;
 
   public RLWE(Polynomial a, BigInteger q, int deg, ArrayList<BigInteger> params,
     Polynomial phi) {
@@ -48,16 +58,35 @@ public class RLWE
   }
 
 
+  public Polynomial getPhi() {
+    return this.phi;
+  }
+
+
   public Polynomial initiate() {
-    Polynomial si = this.chiAlpha();
-    Polynomial ei = this.chiAlpha();
-    return
-      this.a.times(si).plus(ei.scalarTimes(BigInteger.TWO)).modZ(this.q).modP(this.phi);
+    this.si = this.chiAlpha();
+    this.ei = this.chiAlpha();
+    Polynomial pi =
+      this.a.times(this.si).plus(
+        this.ei.scalarTimes(BigInteger.TWO)
+        ).modZ(this.q).modP(this.phi);
+    return pi;
   }
 
 
   public Polynomial respond(Polynomial pi) {
-
+    this.sr = this.chiAlpha();
+    this.er = this.chiAlpha();
+    Polynomial epr = this.chiAlpha();
+    Polynomial pr =
+      this.a.times(this.sr).plus(
+        this.er.scalarTimes(BigInteger.TWO)
+        ).modZ(this.q).modP(this.phi);
+    Polynomial kr =
+      pi.times(sr).plus(
+        epr.scalarTimes(BigInteger.TWO)
+        ).modZ(this.q).modP(this.phi);
+    // finish protocol
   }
 
 
@@ -65,5 +94,11 @@ public class RLWE
     return Polynomial.randPolynomial(
       this.deg, this.params, Mathematics.FINITE_DGAUSSIAN
       ).modZ(this.q).modP(this.phi);
+  }
+
+
+  public static void main(String args[]) {
+    RLWE r = new RLWE();
+    System.out.println(r.getPhi());
   }
 }
