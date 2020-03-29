@@ -75,6 +75,10 @@ public class Polynomial
   /*
     Polynomial arithmetic:
 
+      modZ(BigInteger z): returns this mod z.
+
+      modP(Polynomial p): returns this mod p.
+
       plus(Polynomial p): returns this + p.
 
       plusModZ(Polynomial p, BigInteger z): returns (this + p) mod z.
@@ -86,7 +90,27 @@ public class Polynomial
       timesModZ(Polynomial p, BigInteger z): returns (this * p) mod z.
 
       timesModP(Polynomial p, Polynomial q): returns (this * p) mod q.
+
+      scalarTimes(BigInteger k): returns k * this.
   */
+
+  public Polynomial modZ(BigInteger z) {
+    ArrayList<BigInteger> coeffs = this.coeffs;
+    for (int i = 0; i < coeffs.size(); i++) {
+      coeffs.set(i, coeffs.get(i).mod(z));
+    }
+    return new Polynomial(coeffs);
+  }
+
+
+  public Polynomial modP(Polynomial p) {
+    ArrayList<BigInteger> coeffs = this.coeffs;
+    for (int i = 0; i < coeffs.size(); i++) {
+      coeffs.set(i, coeffs.get(i).mod(p.getCoeffOf(i)));
+    }
+    return new Polynomial(coeffs);
+  }
+
 
   public Polynomial plus(Polynomial p) {
     int maxDegree = Math.max(this.degree, p.getDegree());
@@ -103,21 +127,13 @@ public class Polynomial
 
   // Sum of Polynomials mod a BigInteger
   public Polynomial plusModZ(Polynomial p, BigInteger z) {
-    ArrayList<BigInteger> sumCoeffs = this.plus(p).getCoeffs();
-    for (int i = 0; i < sumCoeffs.size(); i++) {
-      sumCoeffs.set(i, sumCoeffs.get(i).mod(z));
-    }
-    return new Polynomial(sumCoeffs);
+    return this.plus(p).modZ(z);
   }
 
 
   // Sum of Polynomials mod a Polynomial
   public Polynomial plusModP(Polynomial p, Polynomial q) {
-    ArrayList<BigInteger> sumCoeffs = this.plus(p).getCoeffs();
-    for (int i = 0; i < sumCoeffs.size(); i++) {
-      sumCoeffs.set(i, sumCoeffs.get(i).mod(q.getCoeffOf(i)));
-    }
-    return new Polynomial(sumCoeffs);
+    return this.plus(p).modP(q);
   }
 
 
@@ -141,14 +157,21 @@ public class Polynomial
 
 
   public Polynomial timesModZ(Polynomial p, BigInteger z) {
-    Polynomial prod = this.times(p);
-    return prod.plusModZ(zero(prod.getDegree()), z);
+    return this.times(p).modZ(z);
   }
 
 
   public Polynomial timesModP(Polynomial p, Polynomial q) {
-    Polynomial prod = this.times(p);
-    return prod.plusModP(zero(prod.getDegree()), q);
+    return this.times(p).modP(q);
+  }
+
+
+  public Polynomial scalarTimes(BigInteger k) {
+    ArrayList<BigInteger> prodCoeffs = new ArrayList<BigInteger>(this.degree + 1);
+    for (int i = 0; i < this.degree + 1; i++) {
+      prodCoeffs.add(this.getCoeffOf(i).multiply(k));
+    }
+    return new Polynomial(prodCoeffs);
   }
 
 

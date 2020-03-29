@@ -14,6 +14,9 @@ public class Mathematics
         add(params -> finiteDNormRandBigInt(params));
       }
     };
+  public static int UNIFORM = 0;
+  public static int DGAUSSIAN = 1;
+  public static int FINITE_DGAUSSIAN = 2;
 
 
   /*
