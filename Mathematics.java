@@ -13,10 +13,20 @@ public class Mathematics
         add(p -> Mathematics.dNormRandBigInt(p));
       }
     };
-    
 
-  // Generate random BigInteger between minLimit, inclusive, and maxLimit,
-  //  exclusive
+
+  /*
+    Probability distributions:
+
+      unifRandBigInt(ArrayList<BigInteger> params): generates a uniform random
+        BigInteger between params(0), inclusive, and params(1), exclusive.
+
+      dNormRandBigInt(ArrayList<BigInteger> params): generates a random variable
+        distributed according to the discrete Gaussian distribution with mean
+        params(0) and standard deviation params(1).
+
+  */
+
   public static BigInteger unifRandBigInt(ArrayList<BigInteger> params) {
     BigInteger minLimit = params.get(0);
     BigInteger maxLimit = params.get(1);
@@ -30,19 +40,23 @@ public class Mathematics
   }
 
 
-// Generate random BigInteger according to the discrete Gaussian distribution
-//  with mean mu, variance sigma^2
-public static BigInteger dNormRandBigInt(ArrayList<BigInteger> params) {
-  BigInteger mu = params.get(0);
-  BigInteger sigma = params.get(1);
-  Random rnd = new Random();
-  double gaussian = ((double) mu.intValue()) +  ((double) sigma.intValue()) *
-    rnd.nextGaussian();
-  return new BigInteger(Integer.toString((int) Math.floor(gaussian)));
-}
+  public static BigInteger dNormRandBigInt(ArrayList<BigInteger> params) {
+    BigInteger mu = params.get(0);
+    BigInteger sigma = params.get(1);
+    Random rnd = new Random();
+    double gaussian = ((double) mu.intValue()) +  ((double) sigma.intValue()) *
+      rnd.nextGaussian();
+    return new BigInteger(Integer.toString((int) Math.floor(gaussian)));
+  }
 
 
-  // Rabin-Miller primality test on n with k rounds of testing
+  /*
+    Number-theoretic algorithms:
+
+      isPrime(BigInteger n, int k): probabilistically checks the primality of
+        n according to the Rabin-Miller test using precision parameter k.
+  */
+
   public static boolean isPrime(BigInteger n, int k) {
     BigInteger one = new BigInteger("1");
     BigInteger two = new BigInteger("2");

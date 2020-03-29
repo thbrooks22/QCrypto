@@ -45,6 +45,7 @@ public class Polynomial
         this.coeffs.add(new BigInteger("0"));
       }
       this.coeffs.add(z);
+      this.degree = k;
     }
     else this.coeffs.set(k, z);
   }
