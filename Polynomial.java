@@ -105,4 +105,9 @@ public class Polynomial
     }
     return new Polynomial(sumCoeffs);
   }
+
+
+  public static void main(String[] args) {
+    System.out.println(Mathematics.isPrime(new BigInteger(args[0]), 50));
+  }
 }

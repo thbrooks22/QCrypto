@@ -35,7 +35,7 @@ public class Mathematics
     try {
       minLimit = params.get(0);
       maxLimit = params.get(1);
-      if (minLimit.compareTo(maxLimit) <= 0) throw new Exception();
+      if (minLimit.compareTo(maxLimit) >= 0) throw new Exception();
     }
     catch (Exception e) {
       throw new
@@ -82,9 +82,9 @@ public class Mathematics
   */
 
   public static boolean isPrime(BigInteger n, int k) {
-    BigInteger one = new BigInteger("1");
-    BigInteger two = new BigInteger("2");
-    BigInteger r = new BigInteger("0");
+    BigInteger one = BigInteger.ONE;
+    BigInteger two = BigInteger.TWO;
+    BigInteger r = BigInteger.ZERO;
     BigInteger d = n.subtract(one);
 
     while (!one.equals(d.mod(two))) {
@@ -93,16 +93,21 @@ public class Mathematics
     }
 
     for (int i = k; i > 0; i--) {
+      boolean ct = false;
       ArrayList<BigInteger> params = new ArrayList<BigInteger>(2);
       params.add(two);
-      params.add(n.subtract(two));
+      params.add(n.subtract(one));
       BigInteger a = unifRandBigInt(params);
       BigInteger x = a.pow(d.intValue()).mod(n);
       if (x.equals(one) || x.equals(n.subtract(one))) continue;
       for (int j = r.intValue() - 1; j > 0; j--) {
         x = x.pow(2).mod(n);
-        if (x.equals(n.subtract(one))) continue;
+        if (x.equals(n.subtract(one))) {
+          ct = true;
+          break;
+        }
       }
+      if (ct) continue;
       return false;
     }
 
