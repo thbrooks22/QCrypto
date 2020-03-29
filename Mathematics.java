@@ -2,9 +2,19 @@ import java.math.BigInteger;
 import java.lang.Math;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.function.Function;
 
 public class Mathematics
 {
+  public static ArrayList<Function<ArrayList<BigInteger>, BigInteger>> distros =
+    new ArrayList<Function<ArrayList<BigInteger>, BigInteger>>() {
+      {
+        add(p -> Mathematics.unifRandBigInt(p));
+        add(p -> Mathematics.dNormRandBigInt(p));
+      }
+    };
+    
+
   // Generate random BigInteger between minLimit, inclusive, and maxLimit,
   //  exclusive
   public static BigInteger unifRandBigInt(ArrayList<BigInteger> params) {

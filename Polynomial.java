@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.math.BigInteger;
 import java.lang.Math;
-import java.util.function.Function;
+
 
 public class Polynomial
 {
@@ -64,13 +64,9 @@ public class Polynomial
   //  mod maxLimit
   public static Polynomial randPolynomial(int deg, ArrayList<BigInteger> params,
     int distro) {
-    ArrayList<Function<ArrayList<BigInteger>, BigInteger>> distros =
-      new ArrayList<Function<ArrayList<BigInteger>, BigInteger>>();
-    distros.add(p -> Mathematics.unifRandBigInt(p));
-    distros.add(p -> Mathematics.dNormRandBigInt(p));
     ArrayList<BigInteger> coeffs= new ArrayList<BigInteger>(deg + 1);
     for (int i = 0; i < deg + 1; i++) {
-      coeffs.add(distros.get(distro).apply(params));
+      coeffs.add(Mathematics.distros.get(distro).apply(params));
     }
     return new Polynomial(coeffs);
   }
